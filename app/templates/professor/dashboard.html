@@ -1,0 +1,18 @@
+﻿{% extends 'base.html' %}
+{% block title %}Dashboard do Professor - Acessa Acadêmico{% endblock %}
+{% block head_extra %}
+<style>
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card{background:#f2f2f2;padding:16px;border-radius:8px}
+.card h3{margin:0 0 8px}
+</style>
+{% endblock %}
+{% block content %}
+<h1>Bem-vindo(a), Professor(a)</h1>
+<p>Visão geral inicial do seu ambiente.</p>
+<div class=""cards"">
+  <div class=""card""><h3>Aulas criadas</h3><p>{{ stats.aulas_criadas }}</p></div>
+  <div class=""card""><h3>Alunos ativos</h3><p>{{ stats.alunos_ativos }}</p></div>
+  <div class=""card""><h3>Tarefas pendentes</h3><p>{{ stats.tarefas_pendentes }}</p></div>
+</div>
+{% endblock %}

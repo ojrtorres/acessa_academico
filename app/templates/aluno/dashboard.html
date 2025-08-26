@@ -1,0 +1,10 @@
+﻿{% extends 'base.html' %}
+{% block title %}Dashboard do Aluno - Acessa Acadêmico{% endblock %}
+{% block content %}
+<h1>Olá, estudante!</h1>
+<p>Seu resumo de estudos aparece aqui.</p>
+<ul>
+  <li>Aulas em andamento: {{ resumo.aulas_em_andamento }}</li>
+  <li>Tarefas pendentes: {{ resumo.tarefas_pendentes }}</li>
+</ul>
+{% endblock %}

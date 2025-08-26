@@ -1,0 +1,19 @@
+{% macro field(field, label=None, placeholder='', classes='input', id=None, autocomplete=None, required=False) -%}
+  <div class="form-group {{ 'has-error' if field.errors }}">
+    <label for="{{ (id or field.id) }}">{{ label or field.label.text }}</label>
+    {{ field(
+        class_=classes,
+        id=(id or field.id),
+        placeholder=placeholder,
+        autocomplete=autocomplete,
+        required=required
+    ) }}
+    {% if field.errors %}
+      <ul class="errors">
+        {% for e in field.errors %}
+          <li>{{ e }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+{%- endmacro %}

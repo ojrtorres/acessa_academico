@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% import 'macros/forms.html' as f %}
+
+{% block title %}Criar Conta - Acessa Acadêmico{% endblock %}
+
+{% block content %}
+<section class=""auth-card"" aria-labelledby=""register-title"">
+  <h1 id=""register-title"" class=""mt-0"">Criar Conta</h1>
+
+  <form method=""post"" novalidate>
+    {{ form.hidden_tag() }}
+
+    {{ f.field(form.email,
+               placeholder='seu@email.com',
+               autocomplete='email',
+               required=True) }}
+
+    {{ f.field(form.password,
+               placeholder='Crie uma senha (mín. 6)',
+               autocomplete='new-password',
+               required=True) }}
+
+    {{ f.field(form.confirm,
+               placeholder='Repita a senha',
+               autocomplete='new-password',
+               required=True) }}
+
+    {{ f.field(form.role,
+               label='Perfil',
+               required=True) }}
+
+    {{ form.submit(class_='btn mt-2') }}
+
+    <p class=""mt-2"">Já possui conta?
+      <a href=""{{ url_for('auth.login') }}"">Entrar</a>
+    </p>
+  </form>
+</section>
+{% endblock %}

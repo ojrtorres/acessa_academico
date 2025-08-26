@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Acessa Acadêmico{% endblock %}
+
+{% block head_extra %}
+<style>
+.dashboard-welcome {
+    margin-top: 20px;
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 8px;
+}
+.card-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.card {
+    flex: 1 0 200px;
+    background-color: #e3e3e3;
+    padding: 15px;
+    border-radius: 6px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-welcome">
+    <h2>Bem-vindo, Professor(a)!</h2>
+    <p>Este é seu ambiente principal de trabalho com ferramentas de acessibilidade e recursos pedagógicos.</p>
+</div>
+
+<div class="card-container">
+    <div class="card">
+        <h3>Aulas</h3>
+        <p>Gerencie suas aulas e materiais.</p>
+    </div>
+    <div class="card">
+        <h3>Alunos</h3>
+        <p>Veja desempenho e dados dos alunos.</p>
+    </div>
+    <div class="card">
+        <h3>Relatórios</h3>
+        <p>Gere relatórios de uso e progresso.</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,74 @@
+/* ========= Design Tokens ========= */
+:root{
+  --brand:#0b5aa2; --brand-600:#0a4d8a;
+  --text:#222; --muted:#666; --bg:#fff; --surface:#f7f7f7;
+  --ok:#0b5a2a; --warn:#9a6b00; --err:#7d0017;
+  --focus:#ffcc00; --radius:8px; --shadow:0 1px 3px rgba(0,0,0,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --text:#eaeaea; --muted:#aaa; --bg:#0f1115; --surface:#1c1f26;
+    --brand:#1c7ed6; --brand-600:#1864ab; --focus:#ffd43b;
+  }
+}
+
+/* Base */
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.5;color:var(--text);background:var(--bg)}
+a{color:#4a2dbf;text-decoration:underline} a:hover{text-decoration:none}
+
+/* Skip link */
+.skip{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+.skip:focus{left:8px;top:8px;width:auto;height:auto;padding:6px 10px;background:#fff;color:#000;border:2px solid var(--focus);border-radius:6px;z-index:10000}
+
+/* Topbar */
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:var(--brand);color:#fff}
+.topbar .brand{font-weight:700}
+.menu{list-style:none;margin:0;padding:0;display:flex;gap:16px}
+.menu a{color:#fff;text-decoration:none}
+.menu a:focus{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
+
+/* Layout */
+main{padding:32px 20px;max-width:1100px;margin:0 auto}
+.footer{padding:16px;text-align:center;color:var(--muted);border-top:1px solid #eaeaea}
+@media (prefers-color-scheme: dark){ .footer{border-top-color:#222} }
+
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card{background:var(--surface);padding:16px;border-radius:var(--radius);box-shadow:var(--shadow)}
+.card h3{margin:0 0 8px}
+
+/* Forms */
+.auth-card{max-width:640px;margin:24px auto;background:var(--surface);padding:28px;border-radius:var(--radius);box-shadow:var(--shadow)}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;margin:6px 0}
+.input{width:100%;padding:12px 14px;border:1px solid #ccc;border-radius:10px;background:#fff}
+.input:focus{outline:3px solid var(--focus);outline-offset:2px}
+.errors{color:var(--err);margin:6px 0 0 0;padding-left:18px}
+.errors li{margin:2px 0}
+
+/* Buttons */
+.btn{display:inline-block;background:var(--brand);color:#fff;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;box-shadow:var(--shadow)}
+.btn:hover{filter:brightness(1.05)}
+.btn.secondary{background:#6c757d}
+.btn.block{display:block;width:100%}
+
+/* Flash */
+.flash-area{margin:10px 0}
+.flash{padding:10px;border-radius:6px;margin-bottom:8px}
+.flash.success{background:#e8f7e8;color:var(--ok)}
+.flash.warning{background:#fff5da;color:var(--warn)}
+.flash.danger{background:#fde8e8;color:var(--err)}
+
+/* Watermark */
+body::after{
+  content:'Acessa Acadêmico';
+  position:fixed;right:20px;bottom:20px;z-index:9999;
+  color:rgba(0,0,0,0.08);font-weight:700;letter-spacing:1px;
+  transform:rotate(-18deg);font-size:22px;pointer-events:none;user-select:none
+}
+
+/* Utils */
+.mt-0{margin-top:0}.mt-1{margin-top:6px}.mt-2{margin-top:12px}.mt-3{margin-top:18px}
+.mb-1{margin-bottom:6px}.mb-2{margin-bottom:12px}.mb-3{margin-bottom:18px}
+.center{margin-left:auto;margin-right:auto}.text-center{text-align:center}

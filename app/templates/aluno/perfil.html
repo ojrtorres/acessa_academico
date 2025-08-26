@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% import 'macros/forms.html' as f %}
+
+{% block title %}Meu Perfil - Acessa Acadêmico{% endblock %}
+
+{% block content %}
+<section class=""auth-card"" aria-labelledby=""perfil-title"">
+  <h1 id=""perfil-title"" class=""mt-0"">Meu Perfil</h1>
+
+  <form method=""post"" novalidate>
+    {{ form.hidden_tag() }}
+
+    {{ f.field(form.curso, placeholder='Ex.: Pedagogia') }}
+    {{ f.field(form.turma, placeholder='Ex.: 5º período') }}
+    {{ f.field(form.deficiencia, label='Deficiência') }}
+    {{ f.field(form.cid_code, label='CID', placeholder='Ex.: H54.0') }}
+    {{ f.field(form.observacoes, label='Observações pedagógicas', classes='input') }}
+
+    {{ form.submit(class_='btn mt-2') }}
+  </form>
+
+  <p class=""mt-2"">
+    <small>Seus dados sensíveis são visíveis apenas para você e profissionais autorizados. 🔒</small>
+  </p>
+</section>
+{% endblock %}

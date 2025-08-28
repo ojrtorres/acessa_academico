@@ -1,49 +1,38 @@
 # app/config.py
+from __future__ import annotations
 import os
-from datetime import timedelta
+from pathlib import Path
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+# Pasta padrão para o SQLite local (Desktop)
+BASE_DIR = Path.home() / "AcessaAcademico"
+BASE_DIR.mkdir(parents=True, exist_ok=True)  # garante que existe
 
-# Diretório de dados por usuário (Windows/Mac/Linux)
-USER_DATA_DIR = os.path.join(os.path.expanduser("~"), "AcessaAcademico")
-os.makedirs(USER_DATA_DIR, exist_ok=True)
-SQLITE_PATH = os.path.join(USER_DATA_DIR, "acessa.db")
+def sqlite_uri(path: Path) -> str:
+    # SQLAlchemy aceita "sqlite:///<PATH>" com barras normais
+    return "sqlite:///" + str(path).replace("\\", "/")
 
 class BaseConfig:
-    SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-change-me")
+    SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    REMEMBER_COOKIE_DURATION = timedelta(days=14)
-    SESSION_COOKIE_NAME = "acessa_session"
-    WTF_CSRF_TIME_LIMIT = None
-
-class DevelopmentConfig(BaseConfig):
-    DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or \
-        f"sqlite:///{os.path.join(BASE_DIR, 'dev.db')}"
-
-class ProductionConfig(BaseConfig):
-    DEBUG = False
-    # Em produção (Render/Cloud), use DATABASE_URL (Postgres)
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or \
-        f"sqlite:///{os.path.join(BASE_DIR, 'prod.db')}"
-
-class TestingConfig(BaseConfig):
-    TESTING = True
-    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
+    BRAND_NAME = "Acessa Acadêmico"
 
 class DesktopConfig(BaseConfig):
-    """Config para app empacotado no PC do usuário (sem rede)."""
-    DEBUG = False
-    # Banco local por usuário:
-    SQLALCHEMY_DATABASE_URI = f"sqlite:///{SQLITE_PATH}"
+    # Banco local do usuário (app desktop)
+    SQLALCHEMY_DATABASE_URI = sqlite_uri(BASE_DIR / "acessa.db")
+
+class DevelopmentConfig(BaseConfig):
+    # Usa DATABASE_URL se existir, senão um SQLite dev
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL",
+        sqlite_uri(BASE_DIR / "acessa_dev.db"),
+    )
+
+class ProductionConfig(BaseConfig):
+    # Produção exige DATABASE_URL (Postgres etc.)
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL", "")
 
 CONFIG_MAP = {
+    "desktop": DesktopConfig,
     "development": DevelopmentConfig,
     "production": ProductionConfig,
-    "testing": TestingConfig,
-    "desktop": DesktopConfig,
 }
-
-def get_config():
-    env = os.environ.get("APP_ENV", "development").lower()
-    return CONFIG_MAP.get(env, DevelopmentConfig)

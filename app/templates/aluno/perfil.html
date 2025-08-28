@@ -1,26 +1,30 @@
-{% extends 'base.html' %}
-{% import 'macros/forms.html' as f %}
-
-{% block title %}Meu Perfil - Acessa Acadêmico{% endblock %}
-
+{% extends "base.html" %}
+{% block title %}Meu Perfil · Acessa Acadêmico{% endblock %}
 {% block content %}
-<section class=""auth-card"" aria-labelledby=""perfil-title"">
-  <h1 id=""perfil-title"" class=""mt-0"">Meu Perfil</h1>
-
-  <form method=""post"" novalidate>
-    {{ form.hidden_tag() }}
-
-    {{ f.field(form.curso, placeholder='Ex.: Pedagogia') }}
-    {{ f.field(form.turma, placeholder='Ex.: 5º período') }}
-    {{ f.field(form.deficiencia, label='Deficiência') }}
-    {{ f.field(form.cid_code, label='CID', placeholder='Ex.: H54.0') }}
-    {{ f.field(form.observacoes, label='Observações pedagógicas', classes='input') }}
-
-    {{ form.submit(class_='btn mt-2') }}
+<section class="auth-card">
+  <h2 class="mt-0">Meu Perfil</h2>
+  <form method="post" novalidate>
+    <div class="form-group">
+      <label for="curso">Curso</label>
+      <input id="curso" name="curso" class="input" value="{{ perfil.curso or '' }}">
+    </div>
+    <div class="form-group">
+      <label for="turma">Turma</label>
+      <input id="turma" name="turma" class="input" value="{{ perfil.turma or '' }}">
+    </div>
+    <div class="form-group">
+      <label for="deficiencia">Deficiência</label>
+      <input id="deficiencia" name="deficiencia" class="input" value="{{ perfil.deficiencia or '' }}">
+    </div>
+    <div class="form-group">
+      <label for="cid_code">CID</label>
+      <input id="cid_code" name="cid_code" class="input" value="{{ perfil.cid_code or '' }}">
+    </div>
+    <div class="form-group">
+      <label for="observacoes">Observações</label>
+      <textarea id="observacoes" name="observacoes" class="input" rows="4">{{ perfil.observacoes or '' }}</textarea>
+    </div>
+    <button type="submit" class="btn">Salvar</button>
   </form>
-
-  <p class=""mt-2"">
-    <small>Seus dados sensíveis são visíveis apenas para você e profissionais autorizados. 🔒</small>
-  </p>
 </section>
 {% endblock %}

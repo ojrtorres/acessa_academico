@@ -1,42 +1,56 @@
-from flask import render_template, redirect, url_for, flash
+from __future__ import annotations
+from flask import render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
-from ..models import role_required, AlunoProfile
-from .. import db
 from . import aluno_bp
-from .forms import AlunoPerfilForm
+from app import db
+from app.models import AlunoProfile
 
-@aluno_bp.route('/dashboard')
+def _ensure_aluno_profile():
+    """Garante que o aluno logado tem um AlunoProfile; cria se não existir."""
+    perfil = current_user.aluno_profile
+    if not perfil:
+        perfil = AlunoProfile(user_id=current_user.id)
+        db.session.add(perfil)
+        db.session.commit()
+    return perfil
+
+@aluno_bp.get("/dashboard")
 @login_required
-@role_required('aluno')
 def dashboard():
+    # Proteção por papel
+    if current_user.role != "aluno":
+        flash("Acesso permitido apenas a alunos.", "warning")
+        return redirect(url_for("main.index"))
+
+    # Resumo mínimo para o template (placeholders seguros)
     resumo = {
-        'aulas_em_andamento': 0,
-        'tarefas_pendentes': 0,
+        "aulas_em_andamento": 0,
+        "tarefas_pendentes": 0,
+        "materiais_novos": 0,
+        "mensagens": 0,
+        "progresso_percent": 0,
+        "proximas_avaliacoes": [],  # lista de dicionários se quiser
     }
-    return render_template('aluno/dashboard.html', resumo=resumo)
 
-@aluno_bp.route('/perfil', methods=['GET', 'POST'])
+    return render_template("aluno/dashboard.html", resumo=resumo)
+
+@aluno_bp.route("/perfil", methods=["GET", "POST"])
 @login_required
-@role_required('aluno')
 def perfil():
-    # Garante que o aluno tenha um perfil vinculado
-    profile = current_user.aluno_profile
-    if profile is None:
-        profile = AlunoProfile(user_id=current_user.id)
-        db.session.add(profile)
+    if current_user.role != "aluno":
+        flash("Acesso permitido apenas a alunos.", "warning")
+        return redirect(url_for("main.index"))
+
+    perfil = _ensure_aluno_profile()
+
+    if request.method == "POST":
+        perfil.curso = request.form.get("curso") or perfil.curso
+        perfil.turma = request.form.get("turma") or perfil.turma
+        perfil.deficiencia = request.form.get("deficiencia") or perfil.deficiencia
+        perfil.cid_code = request.form.get("cid_code") or perfil.cid_code
+        perfil.observacoes = request.form.get("observacoes") or perfil.observacoes
         db.session.commit()
+        flash("Perfil atualizado com sucesso.", "success")
+        return redirect(url_for("aluno.perfil"))
 
-    form = AlunoPerfilForm(obj=profile)
-
-    if form.validate_on_submit():
-        profile.curso = form.curso.data or None
-        profile.turma = form.turma.data or None
-        profile.deficiencia = form.deficiencia.data or None
-        profile.cid_code = form.cid_code.data or None
-        profile.observacoes = form.observacoes.data or None
-
-        db.session.commit()
-        flash('Perfil atualizado com sucesso.', 'success')
-        return redirect(url_for('aluno.perfil'))
-
-    return render_template('aluno/perfil.html', form=form)
+    return render_template("aluno/perfil.html", perfil=perfil)

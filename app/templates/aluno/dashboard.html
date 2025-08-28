@@ -1,10 +1,41 @@
-﻿{% extends 'base.html' %}
-{% block title %}Dashboard do Aluno - Acessa Acadêmico{% endblock %}
+﻿{% extends "base.html" %}
+{% block title %}Dashboard do Aluno · Acessa Acadêmico{% endblock %}
+
 {% block content %}
-<h1>Olá, estudante!</h1>
-<p>Seu resumo de estudos aparece aqui.</p>
-<ul>
-  <li>Aulas em andamento: {{ resumo.aulas_em_andamento }}</li>
-  <li>Tarefas pendentes: {{ resumo.tarefas_pendentes }}</li>
-</ul>
+<section class="cards">
+  <div class="card">
+    <h3 class="mt-0">Bem-vindo(a)!</h3>
+    <p>Seu painel de estudante. Em breve: aulas, tarefas, materiais acessíveis e mais.</p>
+  </div>
+
+  <div class="card">
+    <h3>Resumo</h3>
+    <ul>
+      <li>Aulas em andamento: {{ resumo.aulas_em_andamento|default(0) }}</li>
+      <li>Tarefas pendentes: {{ resumo.tarefas_pendentes|default(0) }}</li>
+      <li>Materiais novos: {{ resumo.materiais_novos|default(0) }}</li>
+      <li>Mensagens: {{ resumo.mensagens|default(0) }}</li>
+      <li>Progresso: {{ resumo.progresso_percent|default(0) }}%</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Próximas avaliações</h3>
+    {% if resumo.proximas_avaliacoes and resumo.proximas_avaliacoes|length %}
+      <ul>
+        {% for prova in resumo.proximas_avaliacoes %}
+        <li>
+          <strong>{{ prova.disciplina }}</strong> — {{ prova.data }} (peso {{ prova.peso }})
+        </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>Nenhuma avaliação agendada.</p>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <a class="btn" href="{{ url_for('aluno.perfil') }}">Editar meu perfil</a>
+  </div>
+</section>
 {% endblock %}

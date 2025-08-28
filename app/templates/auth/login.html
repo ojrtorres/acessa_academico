@@ -1,34 +1,40 @@
-{% extends 'base.html' %}
-{% import 'macros/forms.html' as f %}
-
-{% block title %}Entrar - Acessa Acadêmico{% endblock %}
-
+{% extends "base.html" %}
+{% block title %}Entrar · Acessa Acadêmico{% endblock %}
 {% block content %}
-<section class=""auth-card"" aria-labelledby=""login-title"">
-  <h1 id=""login-title"" class=""mt-0"">Entrar</h1>
+<main class="container">
+  <section class="auth-card" role="region" aria-labelledby="login-title">
+    <h1 id="login-title" class="mt-0">Entrar</h1>
 
-  <form method=""post"" novalidate>
-    {{ form.hidden_tag() }}
+    <form method="post" action="{{ url_for('auth.login') }}" novalidate>
+      {{ form.hidden_tag() }}
 
-    {{ f.field(form.email,
-               placeholder='seu@email.com',
-               autocomplete='email',
-               required=True) }}
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        {{ form.email(id="email", class_="input", autocomplete="username", placeholder="voce@exemplo.com") }}
+        {% if form.email.errors %}
+          <ul class="errors">{% for e in form.email.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+        {% endif %}
+      </div>
 
-    {{ f.field(form.password,
-               placeholder='Sua senha',
-               autocomplete='current-password',
-               required=True) }}
+      <div class="form-group">
+        <label for="password">Senha</label>
+        {{ form.password(id="password", class_="input", autocomplete="current-password", placeholder="sua senha") }}
+        {% if form.password.errors %}
+          <ul class="errors">{% for e in form.password.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+        {% endif %}
+      </div>
 
-    <label class=""inline"">
-      {{ form.remember() }} Lembrar-me
-    </label>
+      <div class="form-group">
+        {{ form.remember() }} <span>Manter conectado</span>
+      </div>
 
-    {{ form.submit(class_='btn mt-2') }}
+      {{ form.submit(class_="btn block") }}
+    </form>
 
-    <p class=""mt-2"">Não tem conta?
-      <a href=""{{ url_for('auth.register') }}"">Criar agora</a>
+    <p class="mt-2">
+      Não tem conta?
+      <a href="{{ url_for('auth.register') }}">Criar conta</a>
     </p>
-  </form>
-</section>
+  </section>
+</main>
 {% endblock %}

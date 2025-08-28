@@ -1,51 +1,19 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}Acessa Acadêmico{% endblock %}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v=8) }}" />
-  {% block head_extra %}{% endblock %}
-</head>
-<body>
-  <header class="topbar" role="banner">
-    <a class="skip" href="#main-content">Pular para o conteúdo</a>
-    <div class="brand">Acessa Acadêmico</div>
-    <nav aria-label="Menu principal">
-      <ul class="menu">
-        {% if current_user.is_authenticated %}
-          {% if current_user.role == 'professor' %}
-            <li><a href="{{ url_for('professor.dashboard') }}">Dashboard (Professor)</a></li>
-          {% elif current_user.role == 'aluno' %}
-            <li><a href="{{ url_for('aluno.dashboard') }}">Dashboard (Aluno)</a></li>
-            <li><a href="{{ url_for('aluno.perfil') }}">Meu Perfil</a></li>
-          {% endif %}
-          <li><a href="{{ url_for('auth.logout') }}">Sair</a></li>
+<nav aria-label="Menu principal">
+  <ul class="menu">
+    {% if current_user.is_authenticated %}
+      {% if current_user.role == 'professor' %}
+        <li><a href="{{ url_for('professor.dashboard') }}">Dashboard (Professor)</a></li>
+      {% elif current_user.role == 'aluno' %}
+        {% if 'aluno.dashboard' in current_app.view_functions %}
+          <li><a href="{{ url_for('aluno.dashboard') }}">Dashboard (Aluno)</a></li>
         {% else %}
-          <li><a href="{{ url_for('auth.login') }}">Entrar</a></li>
-          <li><a href="{{ url_for('auth.register') }}">Criar conta</a></li>
+          <li><a href="{{ url_for('main.index') }}">Início</a></li>
         {% endif %}
-      </ul>
-    </nav>
-  </header>
-
-  <main id="main-content" tabindex="-1">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div class="flash-area" aria-live="polite">
-          {% for category, message in messages %}
-            <div class="flash {{ category }}">{{ message }}</div>
-          {% endfor %}
-        </div>
       {% endif %}
-    {% endwith %}
-    {% block content %}{% endblock %}
-  </main>
-
-  <footer class="footer">
-    <small>&copy; 2025 Acessa Acadêmico • Inclusão, Acessibilidade e Aprendizagem</small>
-  </footer>
-
-  {% block scripts %}{% endblock %}
-</body>
-</html>
+      <li><a href="{{ url_for('auth.logout') }}">Sair</a></li>
+    {% else %}
+      <li><a href="{{ url_for('auth.login') }}">Entrar</a></li>
+      <li><a href="{{ url_for('auth.register') }}">Criar conta</a></li>
+    {% endif %}
+  </ul>
+</nav>

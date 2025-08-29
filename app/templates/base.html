@@ -1,19 +1,60 @@
-<nav aria-label="Menu principal">
-  <ul class="menu">
-    {% if current_user.is_authenticated %}
-      {% if current_user.role == 'professor' %}
-        <li><a href="{{ url_for('professor.dashboard') }}">Dashboard (Professor)</a></li>
-      {% elif current_user.role == 'aluno' %}
-        {% if 'aluno.dashboard' in current_app.view_functions %}
-          <li><a href="{{ url_for('aluno.dashboard') }}">Dashboard (Aluno)</a></li>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}{{ BRAND_NAME }}{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block head_extra %}{% endblock %}
+</head>
+<body>
+  <a class="skip" href="#main-content">Pular para o conteúdo</a>
+
+  <header class="topbar" role="banner">
+    <div class="brand">{{ BRAND_NAME }}</div>
+    <nav aria-label="Menu principal">
+      <ul class="menu">
+        {% if current_user.is_authenticated %}
+          {# Links de dashboard por perfil #}
+          {% if current_user.role == 'professor' and has_endpoint('professor.dashboard') %}
+            <li><a href="{{ url_for('professor.dashboard') }}">Dashboard (Professor)</a></li>
+          {% elif current_user.role == 'aluno' and has_endpoint('aluno.dashboard') %}
+            <li><a href="{{ url_for('aluno.dashboard') }}">Dashboard (Aluno)</a></li>
+          {% endif %}
+          {% if has_endpoint('auth.logout') %}
+            <li><a href="{{ url_for('auth.logout') }}">Sair</a></li>
+          {% endif %}
         {% else %}
-          <li><a href="{{ url_for('main.index') }}">Início</a></li>
+          {% if has_endpoint('auth.login') %}
+            <li><a href="{{ url_for('auth.login') }}">Entrar</a></li>
+          {% endif %}
+          {% if has_endpoint('auth.register') %}
+            <li><a href="{{ url_for('auth.register') }}">Criar conta</a></li>
+          {% endif %}
         {% endif %}
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-area" aria-live="polite">
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
       {% endif %}
-      <li><a href="{{ url_for('auth.logout') }}">Sair</a></li>
-    {% else %}
-      <li><a href="{{ url_for('auth.login') }}">Entrar</a></li>
-      <li><a href="{{ url_for('auth.register') }}">Criar conta</a></li>
-    {% endif %}
-  </ul>
-</nav>
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <small>&copy; {{ 2025 }} {{ BRAND_NAME }} • Inclusão, Acessibilidade e Aprendizagem</small>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

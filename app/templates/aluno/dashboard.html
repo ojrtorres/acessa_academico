@@ -1,41 +1,32 @@
 ﻿{% extends "base.html" %}
-{% block title %}Dashboard do Aluno · Acessa Acadêmico{% endblock %}
+{% block title %}Dashboard do Aluno • {{ BRAND_NAME }}{% endblock %}
 
 {% block content %}
-<section class="cards">
-  <div class="card">
-    <h3 class="mt-0">Bem-vindo(a)!</h3>
-    <p>Seu painel de estudante. Em breve: aulas, tarefas, materiais acessíveis e mais.</p>
-  </div>
+  <h1 class="mt-0">Bem-vindo(a) à sua Dashboard</h1>
+  <p>Resumo rápido do seu semestre:</p>
 
-  <div class="card">
-    <h3>Resumo</h3>
-    <ul>
-      <li>Aulas em andamento: {{ resumo.aulas_em_andamento|default(0) }}</li>
-      <li>Tarefas pendentes: {{ resumo.tarefas_pendentes|default(0) }}</li>
-      <li>Materiais novos: {{ resumo.materiais_novos|default(0) }}</li>
-      <li>Mensagens: {{ resumo.mensagens|default(0) }}</li>
-      <li>Progresso: {{ resumo.progresso_percent|default(0) }}%</li>
-    </ul>
-  </div>
+  <ul>
+    <li>Aulas em andamento: {{ resumo.aulas_em_andamento|default(0) }}</li>
+    <li>Tarefas pendentes: {{ resumo.tarefas_pendentes|default(0) }}</li>
+    <li>Avisos: {{ resumo.avisos|default(0) }}</li>
+  </ul>
 
-  <div class="card">
-    <h3>Próximas avaliações</h3>
-    {% if resumo.proximas_avaliacoes and resumo.proximas_avaliacoes|length %}
-      <ul>
-        {% for prova in resumo.proximas_avaliacoes %}
-        <li>
-          <strong>{{ prova.disciplina }}</strong> — {{ prova.data }} (peso {{ prova.peso }})
-        </li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <p>Nenhuma avaliação agendada.</p>
-    {% endif %}
-  </div>
+  {% if resumo.curso or resumo.turma %}
+    <p><strong>Curso:</strong> {{ resumo.curso or "-" }} • <strong>Turma:</strong> {{ resumo.turma or "-" }}</p>
+  {% endif %}
 
-  <div class="card">
-    <a class="btn" href="{{ url_for('aluno.perfil') }}">Editar meu perfil</a>
+  <div class="cards">
+    <div class="card">
+      <h3>Materiais</h3>
+      <p>Acesse os materiais disponibilizados pelos professores.</p>
+    </div>
+    <div class="card">
+      <h3>Acessibilidade</h3>
+      <p>Ferramentas de leitura, contraste e transcrição.</p>
+    </div>
+    <div class="card">
+      <h3>Comunicação</h3>
+      <p>Mensagens e avisos importantes do curso.</p>
+    </div>
   </div>
-</section>
 {% endblock %}

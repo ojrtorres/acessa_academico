@@ -1,5 +1,7 @@
 ﻿from flask import Blueprint
 
-aluno_bp = Blueprint("aluno", __name__, url_prefix="/aluno")
+# O blueprint será criado de fato em routes.py
+aluno_bp = Blueprint("aluno", __name__, template_folder="../templates/aluno")
 
-from . import routes  # noqa: F401,E402
+# Importa as rotas para registrar no blueprint
+from . import routes  # noqa
